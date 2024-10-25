@@ -1,0 +1,8 @@
+.glass {
+	width: 50vw;
+	height: 50vh;
+	box-shadow: 0 0 1rem rgba(0, 0, 0, .9);
+	border-radius: 20px;
+	background-color: rgba(222, 222, 222, .4);
+	backdrop-filter: blur(1px);
+}
