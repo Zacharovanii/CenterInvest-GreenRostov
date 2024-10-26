@@ -57,3 +57,12 @@ async def profil_user(id: int):
         user_record = result.scalars().first()
         user = UserResponse(user_record) if user_record else None
     return {"user": user}
+
+@router_cache.get("/my-profil")
+@cache(expire=120)
+async def my_profil(user: User = Depends(current_user)):
+    async with async_session_maker() as async_session:
+        result = await async_session.execute(select(User).where(User.id == user.id))
+        user_record = result.scalars().first()
+        user = UserResponse(user_record) if user_record else None
+    return {"state": 200, "user": user}

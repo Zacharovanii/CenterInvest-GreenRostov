@@ -1,7 +1,7 @@
 from typing import Optional, List
 from datetime import datetime
 from fastapi_users.db import SQLAlchemyBaseUserTable
-from sqlalchemy import ARRAY, TIMESTAMP, Boolean, String, Integer
+from sqlalchemy import ARRAY, TIMESTAMP, Boolean, String, Integer,ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from src.db.base_class import Base
 
@@ -9,16 +9,19 @@ from src.db.base_class import Base
 class User(SQLAlchemyBaseUserTable[int], Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     email: Mapped[str] = mapped_column(String(length=320), unique=True, index=True, nullable=False)
+    phone_number: Mapped[str] = mapped_column(String(length=20), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(length=1024), nullable=False)
 
     name: Mapped[str] = mapped_column(String(length=320), nullable=False)
     lastname: Mapped[str] = mapped_column(String(length=320), nullable=False)
     surname: Mapped[Optional[str]] = mapped_column(String(length=320))
+    
+    level: Mapped[int] = mapped_column(Integer, default=True)
+    points: Mapped[int] = mapped_column(Integer, default=True)
+    role_id: Mapped[int] = mapped_column(Integer, ForeignKey("role.id"))
 
-    level: Mapped[int] = mapped_column(Integer, default=0)  # Изменено на 0
-    points: Mapped[int] = mapped_column(Integer, default=0)  # Изменено на 0
-    achievements: Mapped[Optional[List[str]]] = mapped_column(ARRAY(String), default=list)  # Изменено на list
-    role_id: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # Изменено на 0
+    achievements: Mapped[Optional[list]] = mapped_column(ARRAY(int), default=True)
+    events: Mapped[Optional[list]] = mapped_column(ARRAY(int), default=True)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
