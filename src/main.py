@@ -1,32 +1,44 @@
+from enum import Enum
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi_users import FastAPIUsers
 from src.auth.auth import auth_backend
 from src.auth.schemas import UserCreate, UserRead
 from src.auth.manager import get_user_manager
 from src.db.models.user import User
-from src.db.base_class import Base
-from src.users.router import router_cache
-from src.db.session import async_engine
 from src.settings import settings
-
-async def create_tables():
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+from fastapi.middleware.cors import CORSMiddleware
+from src.event.event import router_events
+from src.points.product import router_product
+from src.users.router import router_cache
 
 
-def start_application():
-    app = FastAPI(
+app = FastAPI(
         title = settings.PROJECT_NAME,
         version = settings.PROJECT_VERSION
     )
-    create_tables()
-    return app
 
 
-app = start_application()
+origins = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+class Tags(Enum):
+    users = 'users_funcs'
+    events = 'events_funcs'
+    points = 'points_funcs'
+    cache = 'cache'
+    pages = 'pages'
 
 
 fastapi_users = FastAPIUsers[User, int](
@@ -35,24 +47,28 @@ fastapi_users = FastAPIUsers[User, int](
 )
 
 
-app = start_application()
-
-
 # Объявление роутеров
-app.include_router(router_cache)
+app.include_router(
+    router_cache,
+    tags=[Tags.users],
+)
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
     prefix="/auth/jwt",
-    tags=["auth"],
+    tags=[Tags.users],
 )
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
     prefix="/auth",
-    tags=["auth"],
+    tags=[Tags.users],
 )
-# Объявление статичных файлов
-app.mount(
-    "/static",
-    StaticFiles(directory="static"),
-    name="static"
+app.include_router(
+    router_events,
+    prefix="/events",
+    tags=[Tags.events]
+)
+app.include_router(
+    router_product,
+    prefix="/users",
+    tags=[Tags.points]
 )

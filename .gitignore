@@ -1,5 +1,2 @@
 .env
 venv
-static\emission_factors.py
-CI.py
-migrations

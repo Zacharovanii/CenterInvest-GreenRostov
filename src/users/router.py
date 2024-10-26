@@ -4,11 +4,13 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter, Depends
 from fastapi_cache import FastAPICache
+from fastapi.responses import FileResponse
+import os
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 from src.db.models.user import User
 from src.db.session import async_session_maker
-from src.users.schemes import UserResponse
+from src.auth.schemas import UserResponse
 from redis import asyncio as aioredis
 from sqlalchemy.future import select
 from fastapi_users import FastAPIUsers
@@ -44,7 +46,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         await stop_redis(redis_process)
 
 router_cache = APIRouter(
-    tags=["Страницы"],
     lifespan=lifespan
 )
 
@@ -66,3 +67,46 @@ async def my_profil(user: User = Depends(current_user)):
         user_record = result.scalars().first()
         user = UserResponse(user_record) if user_record else None
     return {"state": 200, "user": user}
+
+
+from fastapi import UploadFile, File, HTTPException
+from fastapi.responses import FileResponse
+import os
+
+# Укажите папку для хранения аватарок
+AVATAR_DIR = "static\\avatars"
+
+# Функция для загрузки аватарки
+async def upload_avatar(user_id: int, file: UploadFile = File(...)):
+    if not os.path.exists(AVATAR_DIR):
+        os.makedirs(AVATAR_DIR)
+
+    file_path = os.path.join(AVATAR_DIR, f"{user_id}.png")
+    
+    with open(file_path, "wb") as buffer:
+        buffer.write(await file.read())
+    
+    return {"filename": file.filename}
+
+from fastapi import Depends
+
+# Функция для получения аватарки
+async def get_avatar(user_id: int):
+    file_path = os.path.join(AVATAR_DIR, f"{user_id}.jpeg")
+    default_avatar_path = os.path.join(AVATAR_DIR, "1.jpeg")
+
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    else:
+        return FileResponse(default_avatar_path)
+
+
+from fastapi import FastAPI, Depends
+
+@router_cache.post("/users/{user_id}/avatar")
+async def upload_avatar_endpoint(user_id: int, file: UploadFile = File(...)):
+    return await upload_avatar(user_id, file)
+
+@router_cache.get("/users/{user_id}/avatar")
+async def get_avatar_endpoint(user_id: int):
+    return await get_avatar(user_id)
