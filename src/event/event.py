@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.db.models.event import Event  # Импортируйте вашу модель Event
-from src.db.session import async_engine  # Импортируйте ваш engine
+from src.db.models.event import Event
+from src.db.session import async_engine
 from src.event.schemas import EventResponse, EventCreate
 
 router_events = APIRouter()

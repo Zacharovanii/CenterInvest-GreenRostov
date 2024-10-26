@@ -7,7 +7,7 @@ SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 print("Database URL is ", SQLALCHEMY_DATABASE_URL)
 async_engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL, 
-    echo=True,
+    echo=False,
     future=True,
     )
 

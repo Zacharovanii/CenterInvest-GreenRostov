@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from fastapi_users.db import SQLAlchemyBaseUserTable
-from sqlalchemy import ARRAY, TIMESTAMP, Boolean, ForeignKey, String, Integer
+from sqlalchemy import ARRAY, TIMESTAMP, Boolean, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 from src.db.base_class import Base
 
@@ -14,11 +14,11 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     name: Mapped[str] = mapped_column(String(length=320), nullable=False)
     lastname: Mapped[str] = mapped_column(String(length=320), nullable=False)
     surname: Mapped[Optional[str]] = mapped_column(String(length=320))
-    
-    level: Mapped[int] = mapped_column(Integer, default=True)
-    points: Mapped[int] = mapped_column(Integer, default=True)
-    achievements: Mapped[Optional[list]] = mapped_column(ARRAY(String), default=True)
-    role_id: Mapped[int] = mapped_column(Integer, default=True, nullable=False)
+
+    level: Mapped[int] = mapped_column(Integer, default=0)  # Изменено на 0
+    points: Mapped[int] = mapped_column(Integer, default=0)  # Изменено на 0
+    achievements: Mapped[Optional[List[str]]] = mapped_column(ARRAY(String), default=list)  # Изменено на list
+    role_id: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # Изменено на 0
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

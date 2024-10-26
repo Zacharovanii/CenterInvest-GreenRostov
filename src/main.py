@@ -1,11 +1,12 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi_users import FastAPIUsers
 from src.auth.auth import auth_backend
 from src.auth.schemas import UserCreate, UserRead
 from src.auth.manager import get_user_manager
 from src.db.models.user import User
 from src.db.base_class import Base
-from src.auth.routers import router_cache
+from src.users.router import router_cache
 from src.db.session import async_engine
 from src.settings import settings
 
@@ -38,6 +39,7 @@ app = start_application()
 
 
 # Объявление роутеров
+app.include_router(router_cache)
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
     prefix="/auth/jwt",
@@ -48,8 +50,9 @@ app.include_router(
     prefix="/auth",
     tags=["auth"],
 )
-app.include_router(
-    fastapi_users.get_reset_password_router(),
-    prefix="/auth",
-    tags=["auth"],
+# Объявление статичных файлов
+app.mount(
+    "/static",
+    StaticFiles(directory="static"),
+    name="static"
 )
