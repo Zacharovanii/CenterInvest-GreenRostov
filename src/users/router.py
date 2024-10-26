@@ -49,9 +49,9 @@ router_cache = APIRouter(
     lifespan=lifespan
 )
 
-@router_cache.get("/profil-{id}")
+@router_cache.get("/profile-{id}")
 @cache(expire=60)
-async def profil_user(id: int):
+async def profile_user(id: int):
     id = int(id)
     async with async_session_maker() as async_session:
         result = await async_session.execute(select(User).where(User.id == id))
@@ -59,9 +59,9 @@ async def profil_user(id: int):
         user = UserResponse(user_record) if user_record else None
     return {"user": user}
 
-@router_cache.get("/my-profil")
+@router_cache.get("/my-profile")
 @cache(expire=120)
-async def my_profil(user: User = Depends(current_user)):
+async def my_profile(user: User = Depends(current_user)):
     async with async_session_maker() as async_session:
         result = await async_session.execute(select(User).where(User.id == user.id))
         user_record = result.scalars().first()
