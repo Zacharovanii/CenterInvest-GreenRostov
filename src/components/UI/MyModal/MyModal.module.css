@@ -3,6 +3,7 @@
 	inset: 0;
 	display: none;
 	background: rgba(0, 0, 0, .5);
+	z-index: 10;
 }
 
 .myModalContent {

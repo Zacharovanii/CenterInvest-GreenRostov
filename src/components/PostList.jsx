@@ -3,7 +3,7 @@ import PostItem from './PostItem'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import UserSidebar from './UserSidebar'
 
-function PostList({ posts, title, remove }) {
+function PostList({ posts, title, remove, modalFunc }) {
 
 	if (!posts.length) {
 		return (
@@ -14,7 +14,7 @@ function PostList({ posts, title, remove }) {
 	}
 	return (
 		<div className="post-list">
-			<UserSidebar />
+			<UserSidebar modalFunc={modalFunc} />
 			<div className="post_glass">
 				{title}
 			</div>

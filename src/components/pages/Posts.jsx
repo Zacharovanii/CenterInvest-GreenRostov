@@ -9,7 +9,6 @@ import Loader from "../UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { getPageCount } from "../../utils/pages";
 import { useObserver } from "../hooks/useObserver";
-import MySelect from "../UI/select/MySelect";
 
 function Posts() {
 	const [posts, setPosts] = useState([])
@@ -45,9 +44,6 @@ function Posts() {
 		setPosts(posts.filter(p => p.id !== post.id))
 	}
 
-	const changePage = (page) => {
-		setPage(page)
-	}
 
 	return (
 		<div className="App">
@@ -67,6 +63,7 @@ function Posts() {
 				remove={removePost}
 				posts={sortedAndSearchedPosts}
 				title='Список мероприятий'
+				modalFunc={setModal}
 			/>
 			<div ref={lastElement} ></div>
 			{isPostsLoading &&

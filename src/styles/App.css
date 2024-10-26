@@ -23,19 +23,38 @@ body {
 	color: #152D37;
 }
 
-/* 
+
 .navbar {
 	height: 50px;
 	width: 100vw;
 	display: flex;
 	align-items: center;
 	padding: 0 15px;
-	background: lightgray;
+	background: #152D37;
+	color: white;
 }
 
 .navbar__links {
 	margin-left: auto;
-} */
+	color: white;
+
+	a {
+		color: white;
+		margin: 0 2em;
+	}
+
+	a:visited {
+		color: white;
+	}
+
+	a:hover {
+		color: white;
+	}
+
+	a:active {
+		color: white;
+	}
+}
 
 .glass {
 	width: 30vw;
@@ -83,7 +102,7 @@ body {
 
 .sidebar {
 	position: fixed;
-	top: 7.5em;
+	top: 9em;
 	left: 2em;
 	width: 25vw;
 	height: 80vh;
@@ -110,6 +129,22 @@ body {
 .sidebar .profile-button {
 	position: fixed;
 	bottom: 1em;
+	width: 80%;
+	background-color: #10702F;
+	border: none;
+	border-radius: 100px;
+	color: #152D37;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: white;
+	font-size: 2em;
+	padding: .34em;
+}
+
+.sidebar .CO2-button {
+	position: fixed;
+	bottom: 3em;
+	width: 80%;
 	background-color: #10702F;
 	border: none;
 	border-radius: 100px;

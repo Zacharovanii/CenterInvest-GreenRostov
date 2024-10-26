@@ -11,7 +11,7 @@ function Navbar() {
 	}
 
 	return (
-		<div className="navbar">
+		<div className="navbar" >
 			<button onClick={logout} >
 				Logout
 			</button>
