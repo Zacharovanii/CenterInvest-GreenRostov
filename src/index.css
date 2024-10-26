@@ -11,7 +11,7 @@
 body {
 	width: 100%;
 	min-height: 100vh;
-	background: url(../public/bck.test.jpeg) no-repeat center/cover;
+	background: #7D7D7D no-repeat center/cover;
 	display: grid;
 	place-items: center;
 	color: #152D37;
