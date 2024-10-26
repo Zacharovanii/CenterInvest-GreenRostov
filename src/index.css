@@ -9,8 +9,10 @@
 }
 
 body {
-	background-color: #7D7D7D;
+	width: 100%;
+	min-height: 100vh;
+	background: url(../public/bck.test.jpeg) no-repeat center/cover;
 	display: grid;
 	place-items: center;
-	margin-top: 25vh;
+	color: #152D37;
 }
