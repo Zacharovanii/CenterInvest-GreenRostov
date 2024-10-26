@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
-import MyButton from '../button/MyButton'
 import { AuthContext } from '../../context'
 
 function Navbar() {
@@ -13,9 +12,9 @@ function Navbar() {
 
 	return (
 		<div className="navbar">
-			<MyButton onClick={logout} >
+			<button onClick={logout} >
 				Logout
-			</MyButton>
+			</button>
 			<div className="navbar__links">
 				<Link to="/about">About</Link>
 				<Link to="/posts">Posts</Link>

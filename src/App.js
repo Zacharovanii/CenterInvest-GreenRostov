@@ -23,7 +23,7 @@ function App() {
 			isLoading
 		}}>
 			<BrowserRouter>
-				{/* <Navbar /> */}
+				<Navbar />
 				<AppRouter />
 			</BrowserRouter>
 		</AuthContext.Provider>
