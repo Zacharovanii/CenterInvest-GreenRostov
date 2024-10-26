@@ -19,5 +19,5 @@ class Settings:
     #                 f"{POSTGRES_PORT}/{POSTGRES_DB}")
     DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/HackDB"
     SECRET_MANAGER_USER = os.environ.get("SECRET_MANAGER_USER")
-
+    REDIS_FILE: str = os.getenv("REDIS_FILE")
 settings = Settings()

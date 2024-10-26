@@ -13,7 +13,7 @@ from redis import asyncio as aioredis
 from sqlalchemy.future import select
 from fastapi_users import FastAPIUsers
 from src.main import get_user_manager, auth_backend
-
+from src.settings import Settings
 
 LOCAL_REDIS_URL = "redis://127.0.0.1:6379"
 
@@ -24,7 +24,7 @@ fastapi_users = FastAPIUsers[User, int](
 
 current_user = fastapi_users.current_user()
 async def start_redis():
-    process = subprocess.Popen(["C:\\Users\\79001\\Downloads\\Redis-x64-5.0.14.1\\redis-server.exe"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen([Settings.REDIS_FILE], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     await asyncio.sleep(1)  
     return process
 
