@@ -11,5 +11,7 @@ class Event(Base):
     title: Mapped[str] = mapped_column(String(length=120), nullable=False)
     description: Mapped[str] = mapped_column(String(length=320), nullable=False)
     
+    organizer: Mapped[int] = mapped_column(Integer, nullable=False)
+    performers: Mapped[list[int]] = mapped_column(MutableList.as_mutable(ARRAY(Integer)), default=[])
+
     date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    performers: Mapped[list[int]] = mapped_column(MutableList.as_mutable(ARRAY(Integer)), nullable=False)

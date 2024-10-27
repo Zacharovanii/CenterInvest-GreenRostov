@@ -2,7 +2,6 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter
 from src.db.session import async_engine
-from src.db.models.user import User
 
 router = APIRouter()
 @router.put("/level-update")
@@ -44,8 +43,6 @@ async def add_points(
     if points < 0:
         raise HTTPException(status_code=400, detail="Cannot add a negative amount of points.")
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
     
     user.points += points
 

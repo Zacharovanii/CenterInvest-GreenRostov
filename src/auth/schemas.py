@@ -1,4 +1,3 @@
-from typing import Optional
 from fastapi_users import schemas
 from pydantic import EmailStr
 from datetime import datetime
@@ -16,10 +15,9 @@ class UserRead(schemas.BaseUser[int]):
 
     level: int
     points: int
-    achievements: list
 
-    # is_active: bool = True
-    # is_superuser: bool = False
+    events: list[int]
+    achievements: list[int]
 
     role_id: int
     registered_at: datetime
@@ -37,18 +35,7 @@ class UserCreate(schemas.BaseUserCreate):
     email: EmailStr
     password: str
 
-    role_id: int = 0
-    level: int = 0
-    points: int = 0
-
-    achievements: list = None
-    events: list = None
-
-    registered_at: datetime = datetime.utcnow()
-
-    is_active: Optional[bool] = True
-    # is_superuser: Optional[bool] = False
-    # is_verified: Optional[bool] = False
+    role_id: int
 
 class UserResponse:
     def __init__(self, user):
@@ -60,6 +47,7 @@ class UserResponse:
         self.phone_number = user.phone_number
         self.level = user.level
         self.points = user.points
+        self.events = user.events
         self.achievements = user.achievements
         self.role_id = user.role_id
         self.registered_at = user.registered_at

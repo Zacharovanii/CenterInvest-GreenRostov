@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 from fastapi_users.db import SQLAlchemyBaseUserTable
-from sqlalchemy import ARRAY, TIMESTAMP, Boolean, ForeignKey, String, Integer
+from sqlalchemy import ARRAY, TIMESTAMP, Boolean, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 from src.db.base_class import Base
 
@@ -17,14 +17,12 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     lastname: Mapped[str] = mapped_column(String(length=320), nullable=False)
     surname: Mapped[Optional[str]] = mapped_column(String(length=320))
     
-    level: Mapped[int] = mapped_column(Integer)
-    points: Mapped[int] = mapped_column(Integer)
-    role_id: Mapped[int] = mapped_column(Integer)
+    level: Mapped[int] = mapped_column(Integer, default=0)
+    points: Mapped[int] = mapped_column(Integer, default=0)
+    role_id: Mapped[int] = mapped_column(Integer, default=0)
 
-    achievements: Mapped[Optional[list]] = mapped_column(ARRAY(Integer))
-    events: Mapped[Optional[list]] = mapped_column(ARRAY(Integer))
-    
-    
+    achievements: Mapped[Optional[list]] = mapped_column(ARRAY(Integer), default=[])
+    events: Mapped[Optional[list]] = mapped_column(ARRAY(Integer), default=[])
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

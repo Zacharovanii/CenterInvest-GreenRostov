@@ -7,9 +7,12 @@ from src.auth.manager import get_user_manager
 from src.db.models.user import User
 from src.settings import settings
 from fastapi.middleware.cors import CORSMiddleware
+
 from src.event.event import router_events
 from src.points.product import router_product
 from src.users.router import router_cache
+from src.achievements.achievements import router_achievements
+from src.roles.roles import router_roles
 
 
 app = FastAPI(
@@ -37,8 +40,8 @@ class Tags(Enum):
     users = 'users_funcs'
     events = 'events_funcs'
     points = 'points_funcs'
-    cache = 'cache'
-    pages = 'pages'
+    achievements = 'achievements_funcs'
+    roles = 'roles_funcs'
 
 
 fastapi_users = FastAPIUsers[User, int](
@@ -50,7 +53,7 @@ fastapi_users = FastAPIUsers[User, int](
 # Объявление роутеров
 app.include_router(
     router_cache,
-    tags=[Tags.users],
+    tags=[Tags.users]
 )
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
@@ -64,11 +67,18 @@ app.include_router(
 )
 app.include_router(
     router_events,
-    prefix="/events",
     tags=[Tags.events]
 )
 app.include_router(
     router_product,
     prefix="/users",
     tags=[Tags.points]
+)
+app.include_router(
+    router_achievements,
+    tags=[Tags.achievements]
+)
+app.include_router(
+    router_roles,
+    tags=[Tags.roles]
 )

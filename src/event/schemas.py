@@ -1,19 +1,12 @@
 from datetime import datetime
-from typing import List
 from pydantic import BaseModel
 
-class EventCreate(BaseModel):
-    title: str
-    description: str
-    date: datetime
-    performers: List[int]
 
-class EventResponse(BaseModel):
-    id: int
+class EventModel(BaseModel):
     title: str
     description: str
     date: datetime
-    performers: List[int]
+    organizer: int
 
     class Config:
-        orm_mode = True  # Позволяет использовать ORM-объекты
+        orm_mode = True

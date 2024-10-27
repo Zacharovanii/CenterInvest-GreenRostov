@@ -1,11 +1,11 @@
 import subprocess
 import asyncio
+import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter, Depends, UploadFile, File
 from fastapi_cache import FastAPICache
 from fastapi.responses import FileResponse
-import os
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 from src.db.models.user import User
@@ -16,6 +16,7 @@ from sqlalchemy.future import select
 from fastapi_users import FastAPIUsers
 from src.main import get_user_manager, auth_backend
 from src.settings import Settings
+
 
 LOCAL_REDIS_URL = "redis://127.0.0.1:6379"
 
@@ -69,19 +70,15 @@ async def my_profile(user: User = Depends(current_user)):
     return {"state": 200, "user": user}
 
 
-from fastapi import UploadFile, File, HTTPException
-from fastapi.responses import FileResponse
-import os
 
-# Укажите папку для хранения аватарок
-AVATAR_DIR = "static\\avatars"
 
-# Функция для загрузки аватарки
+AVATAR_DIR = "avatars"
+
 async def upload_avatar(user_id: int, file: UploadFile = File(...)):
     if not os.path.exists(AVATAR_DIR):
         os.makedirs(AVATAR_DIR)
 
-    file_path = os.path.join(AVATAR_DIR, f"{user_id}.png")
+    file_path = os.path.join(AVATAR_DIR, f"{user_id}.jpeg")
     
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
@@ -90,7 +87,6 @@ async def upload_avatar(user_id: int, file: UploadFile = File(...)):
 
 from fastapi import Depends
 
-# Функция для получения аватарки
 async def get_avatar(user_id: int):
     file_path = os.path.join(AVATAR_DIR, f"{user_id}.jpeg")
     default_avatar_path = os.path.join(AVATAR_DIR, "1.jpeg")
@@ -100,13 +96,29 @@ async def get_avatar(user_id: int):
     else:
         return FileResponse(default_avatar_path)
 
+async def remove_avatar(user_id: int):
+    file_path = os.path.join(AVATAR_DIR, f"{user_id}.jpeg")
+    default_avatar_path = os.path.join(AVATAR_DIR, "1.jpeg")
+    
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return {"state": 200, "description": "Your avatar has been reset to standard."}
+    else:
+        return {"state": 200, "description": "Your avatar is standard."}
 
 from fastapi import FastAPI, Depends
 
 @router_cache.post("/users/{user_id}/avatar")
-async def upload_avatar_endpoint(user_id: int, file: UploadFile = File(...)):
+async def upload_avatar_endpoint(user: User = Depends(current_user), file: UploadFile = File(...)):
+    user_id = user.id
     return await upload_avatar(user_id, file)
 
 @router_cache.get("/users/{user_id}/avatar")
 async def get_avatar_endpoint(user_id: int):
     return await get_avatar(user_id)
+
+
+@router_cache.delete("/users/{user_id}/avatar")
+async def remove_avatar_endpoint(user: User = Depends(current_user)):
+    user_id = user.id
+    return await remove_avatar(user_id)
