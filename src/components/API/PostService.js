@@ -22,4 +22,11 @@ export default class PostService {
 		const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}/comments`)
 		return response
 	}
+
+	static async registerUser(params) {
+		const response = await axios.post("http://127.0.0.1:8000/auth/register", { params: params })
+		console.log(response);
+
+		return response
+	}
 }

@@ -9,6 +9,8 @@ import Loader from "../UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { getPageCount } from "../../utils/pages";
 import { useObserver } from "../hooks/useObserver";
+import MyInput from "../UI/input/MyInput";
+import MyButton from "../UI/button/MyButton";
 
 function Posts() {
 	const [posts, setPosts] = useState([])
@@ -49,6 +51,13 @@ function Posts() {
 		<div className="App">
 			<MyModal visible={modal} setVisible={setModal}>
 				<PostForm create={createPost} />
+			</MyModal>
+			<MyModal>
+				<div className="C02-modal">
+					<form>
+
+					</form>
+				</div>
 			</MyModal>
 			<hr style={{ margin: '15px 0' }} />
 			<PostFilter
